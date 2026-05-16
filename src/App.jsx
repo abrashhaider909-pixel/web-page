@@ -114,20 +114,19 @@ function getUpcomingArrivals(intervalMinutes, offsetMinutes, count = 6) {
 // 1. Welcome Screen
 const WelcomeScreen = ({ onFind }) => (
   <div className="screen welcome-screen">
-    <h1 className="welcome-title">
-      Your Bus Is Waiting For You!<br />
-      Have A Nice Journey
-    </h1>
+    <h1 className="welcome-title">Welcome to Chakwal Bus Tracker</h1>
 
-    <div style={{ height: '80px' }}></div>
+    <p className="welcome-subtitle">Real-time arrivals • Reliable schedules • Route overview</p>
 
-    <h2 className="location-label">BUS LOCATION IS</h2>
+    <div style={{ height: '40px' }}></div>
 
-    <button className="find-btn" onClick={onFind}>FIND</button>
+    <h2 className="location-label">BUS LOCATION</h2>
 
-    <div style={{ height: '80px' }}></div>
+    <button className="find-btn" onClick={onFind}>Locate Bus</button>
 
-    <div className="footer-text">Made By Maheer Musa</div>
+    <div style={{ height: '40px' }}></div>
+
+    <div className="footer-text">Made By Abrash Haider</div>
   </div>
 );
 
@@ -153,20 +152,25 @@ LoadingScreen.propTypes = {
 };
 
 // 3. Main Dashboard
-const Dashboard = ({ 
-  day, 
-  onStopClick, 
-  selectedStop, 
-  scheduleTehsil, 
-  scheduleBalkasar, 
-  nextStatusTehsil, 
-  nextStatusBalkasar 
+const Dashboard = ({
+  day,
+  onStopClick,
+  selectedStop,
+  scheduleTehsil,
+  scheduleBalkasar,
+  nextStatusTehsil,
+  nextStatusBalkasar
 }) => {
+  const scheduleRows = (scheduleTehsil || []).map((tehsilTime, idx) => ({
+    tehsil: tehsilTime,
+    balkasar: (scheduleBalkasar || [])[idx] || '--'
+  }));
+
   return (
     <div className="screen app-screen">
       <header className="app-header card">
         <div className="header-left">
-          <div className="app-name">Balkasar Express Tracker</div>
+          <div className="app-name">Chakwal Bus Tracker</div>
           <div className="app-tagline">Route schedule and live arrival insights</div>
         </div>
         <div className="day-display">Today: {day}</div>
@@ -221,10 +225,10 @@ const Dashboard = ({
                       </tr>
                     </thead>
                     <tbody>
-                      {Array.from({ length: 6 }).map((_, index) => (
-                        <tr key={index}>
-                          <td>{scheduleTehsil[index] || '—'}</td>
-                          <td>{scheduleBalkasar[index] || '—'}</td>
+                      {scheduleRows.slice(0, 6).map((row, idx) => (
+                        <tr key={`${row.tehsil}-${row.balkasar}-${idx}`}>
+                          <td>{row.tehsil}</td>
+                          <td>{row.balkasar}</td>
                         </tr>
                       ))}
                     </tbody>
